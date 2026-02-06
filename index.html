@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Web App Hub</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+
+    <div class="glass-bg"></div>
+
+    <header>
+        <div class="header-content">
+            <h1>My App Hub</h1>
+            <p>Your Personal Web Universe</p>
+        </div>
+        <button class="settings-btn" onclick="openSettingsModal()" title="Settings">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+    </header>
+
+    <main class="container" id="hubList"></main>
+
+    <button class="fab" onclick="openHubModal()" title="Add New App">
+        <span>+</span>
+    </button>
+
+    <div id="appOverlay" class="app-overlay">
+        <div class="overlay-header">
+            <button class="home-btn" onclick="closeApp()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Back to Hub</span>
+            </button>
+            <span id="activeAppName">Loading...</span>
+        </div>
+        <div class="iframe-container">
+            <iframe id="appFrame" src="" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <div id="hubModal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">New Web App</h2>
+            
+            <div class="input-group">
+                <label>App Name</label>
+                <input type="text" id="appName" placeholder="e.g. SIM Tracker">
+            </div>
+
+            <div class="input-group">
+                <label>Logo URL (Image Link)</label>
+                <input type="text" id="appIcon" placeholder="Paste image link or path">
+            </div>
+
+            <div class="input-group">
+                <label>Folder/File Path</label>
+                <input type="text" id="appUrl" placeholder="e.g. sim-tracker/index.html">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeHubModal()">Cancel</button>
+                <button class="btn-save" onclick="saveApp()">Save App</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="passwordModal" class="modal" style="z-index: 4000;">
+        <div class="modal-content">
+            <h2>Enter Password</h2>
+            <p style="color: #94a3b8; font-size: 0.9em; margin-bottom: 15px;">This app is locked.</p>
+            <div class="input-group">
+                <input type="password" id="unlockPass" placeholder="Enter PIN/Password">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closePasswordModal()">Cancel</button>
+                <button class="btn-save" onclick="verifyPassword()">Unlock</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <h2>Settings</h2>
+            
+            <div id="changePassSection">
+                <h3 style="font-size: 1rem; margin: 15px 0 10px; color: var(--primary);">Security</h3>
+                
+                <div class="input-group" id="oldPassGroup">
+                    <label>Current Password</label>
+                    <input type="password" id="oldPass" placeholder="Old Password">
+                </div>
+
+                <div class="input-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPass" placeholder="New Password">
+                </div>
+
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="confirmPass" placeholder="Confirm New Password">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeSettingsModal()">Close</button>
+                <button class="btn-save" onclick="updatePassword()">Update Password</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="hub-script.js"></script>
+</body>
+</html>

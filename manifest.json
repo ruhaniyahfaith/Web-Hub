@@ -1,0 +1,21 @@
+{
+  "name": "App Web Hub",
+  "short_name": "Web Hub",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f0f2f5",
+  "theme_color": "#4361ee",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/5738/5738031.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/5738/5738031.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
