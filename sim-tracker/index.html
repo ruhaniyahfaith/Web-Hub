@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIM Validity Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>SIM Manager</h1>
+        <p>Validity & 90 Days Tracker</p>
+    </header>
+
+    <div class="container" id="simList">
+        <div id="emptyState" class="empty-state">
+            <p>No SIM added yet. Click + to add.</p>
+        </div>
+    </div>
+
+    <button class="fab" onclick="openModal('add')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </button>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add New SIM</h2>
+            
+            <label>Name</label>
+            <input type="text" id="simName" placeholder="Name">
+            
+            <label>Mobile Number</label>
+            <input type="number" id="simNumber" placeholder="+91 XXXXX XXXXX">
+            
+            <label>Operator</label>
+            <select id="simOperator">
+                <option value="Jio">Jio</option>
+                <option value="Airtel">Airtel</option>
+                <option value="Vi">Vi (Vodafone Idea)</option>
+                <option value="BSNL">BSNL</option>
+            </select>
+
+            <div id="dateInputGroup">
+                <label>Recharge End Date</label>
+                <input type="date" id="simDate">
+            </div>
+
+            <div id="daysInputGroup" style="display:none;">
+                <label>Validity (Days)</label>
+                <input type="number" id="rechargeDays" placeholder="Example: 28, 56, 84">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-save" onclick="saveSim()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
