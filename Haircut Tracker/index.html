@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ডুয়াল হেয়ার ট্র্যাকার | Haircut Tracker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;500;700&display=swap');
+
+        :root {
+            --bg-color: #eef2f3;
+            --safe-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            text-align: center;
+            width: 280px;
+            transition: transform 0.3s ease;
+            position: relative;
+            border-top: 5px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon-header {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        h2 {
+            margin: 0 0 20px 0;
+            color: #555;
+            font-size: 1.4rem;
+        }
+
+        /* Circular Counter */
+        .counter-box {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 6px solid #ddd;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+            transition: all 0.5s ease;
+        }
+
+        .counter-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #888;
+            margin-top: -5px;
+        }
+
+        /* Status & Alert */
+        .status {
+            font-weight: 600;
+            margin-bottom: 20px;
+            height: 24px; /* Fixed height to prevent jump */
+        }
+
+        .card.safe .counter-box { border-color: var(--safe-color); color: var(--safe-color); }
+        .card.safe .status { color: var(--safe-color); }
+        
+        .card.danger .counter-box { 
+            border-color: var(--danger-color); 
+            color: var(--danger-color); 
+            animation: pulse 1.5s infinite;
+        }
+        .card.danger .status { color: var(--danger-color); }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+
+        /* Button */
+        .reset-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: 0.3s;
+            font-family: 'Hind Siliguri', sans-serif;
+            width: 100%;
+        }
+
+        .reset-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .edit-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .mini-btn {
+            background: #eee;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #555;
+        }
+        .mini-btn:hover { background: #ddd; }
+
+    </style>
+</head>
+<body>
+
+    <h1>💇‍♂️ গ্রুমিং ট্র্যাকার</h1>
+
+    <div class="container">
+        
+        <div class="card" id="card-up">
+            <span class="icon-header">💇‍♂️</span>
+            <h2>মাথার চুল (Up)</h2>
+            
+            <div class="counter-box">
+                <span id="count-up">0</span>
+                <span class="counter-label">দিন</span>
+            </div>
+
+            <div class="status" id="status-up">সব ঠিক আছে</div>
+
+            <div class="edit-controls">
+                <button class="mini-btn" onclick="adjustDate('up', -1)">-</button>
+                <small style="line-height:30px; color:#888">দিন সেটিং</small>
+                <button class="mini-btn" onclick="adjustDate('up', 1)">+</button>
+            </div>
+
+            <button class="reset-btn" onclick="resetTracker('up')">আজ কাটা হলো</button>
+        </div>
+
+        <div class="card" id="card-down">
+            <span class="icon-header">🧔</span>
+            <h2>দাড়ি / ফেসিয়াল (Down)</h2>
+            
+            <div class="counter-box">
+                <span id="count-down">0</span>
+                <span class="counter-label">দিন</span>
+            </div>
+
+            <div class="status" id="status-down">সব ঠিক আছে</div>
+
+            <div class="edit-controls">
+                <button class="mini-btn" onclick="adjustDate('down', -1)">-</button>
+                <small style="line-height:30px; color:#888">দিন সেটিং</small>
+                <button class="mini-btn" onclick="adjustDate('down', 1)">+</button>
+            </div>
+
+            <button class="reset-btn" onclick="resetTracker('down')">আজ কাটা হলো</button>
+        </div>
+
+    </div>
+
+    <script>
+        const LIMIT = 35; // Alert limit
+
+        // Load data when page opens
+        document.addEventListener('DOMContentLoaded', () => {
+            updateView('up');
+            updateView('down');
+        });
+
+        function getDays(key) {
+            const storedDate = localStorage.getItem(key);
+            if (!storedDate) return 0;
+            
+            const lastCut = new Date(storedDate);
+            const today = new Date();
+            const diffTime = today - lastCut;
+            
+            // If date is in future (error handling), return 0
+            if(diffTime < 0) return 0;
+
+            return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        function updateView(type) {
+            const key = `tracker_${type}`; // tracker_up or tracker_down
+            const days = getDays(key);
+            
+            const countEl = document.getElementById(`count-${type}`);
+            const cardEl = document.getElementById(`card-${type}`);
+            const statusEl = document.getElementById(`status-${type}`);
+
+            countEl.innerText = days;
+
+            if (days > LIMIT) {
+                // Danger Mode
+                cardEl.classList.remove('safe');
+                cardEl.classList.add('danger');
+                statusEl.innerText = "⚠️ ৩৫ দিন পার হয়েছে!";
+            } else {
+                // Safe Mode
+                cardEl.classList.remove('danger');
+                cardEl.classList.add('safe');
+                statusEl.innerText = "✅ সময় ঠিক আছে";
+            }
+        }
+
+        // Reset to 0 (Today)
+        function resetTracker(type) {
+            if(confirm('আপনি কি নিশ্চিত যে আপনি আজ আপডেট করতে চান?')) {
+                const key = `tracker_${type}`;
+                localStorage.setItem(key, new Date());
+                updateView(type);
+            }
+        }
+
+        // Manual Adjust (+/- days)
+        function adjustDate(type, amount) {
+            const key = `tracker_${type}`;
+            let storedDate = localStorage.getItem(key);
+            let dateObj = storedDate ? new Date(storedDate) : new Date();
+
+            // Subtracting logic: 
+            // If we want to ADD a day to the counter, we move the saved date BACK into the past.
+            // If we want to REMOVE a day, we move the saved date FORWARD.
+            dateObj.setDate(dateObj.getDate() - amount);
+            
+            localStorage.setItem(key, dateObj);
+            updateView(type);
+        }
+    </script>
+</body>
+</html>
