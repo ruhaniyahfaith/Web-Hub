@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Money & Goal Tracker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="auth-view" class="view active">
+        <div class="auth-card">
+            <div class="profile-upload-wrapper">
+                <div class="profile-image-box">
+                    <img id="auth-img-preview" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile">
+                </div>
+                <label for="auth-photo-input" class="camera-btn">
+                    <i class="fa-solid fa-camera"></i>
+                </label>
+                <input type="file" id="auth-photo-input" hidden accept="image/*" onchange="previewImage(this, 'auth-img-preview')">
+            </div>
+            
+            <h2>Setup Profile</h2>
+            <p style="font-size:12px; color:#888; margin-bottom:20px;">Choose a photo & enter details</p>
+
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="auth-name" placeholder="Enter Name">
+            </div>
+            <div class="input-group">
+                <label>Mobile Number</label>
+                <input type="number" id="auth-mobile" placeholder="Mobile Number">
+            </div>
+            <div class="row">
+                <div class="input-group">
+                    <label>Currency</label>
+                    <input type="text" value="INR (₹)" disabled>
+                </div>
+                <div class="input-group">
+                    <label>Language</label>
+                    <input type="text" value="English" disabled>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="handleLogin()">Get Started</button>
+        </div>
+    </div>
+
+    <div id="app-wrapper" class="hidden">
+        
+        <div id="home-view" class="tab-content active">
+            <div class="header">
+                <div class="user-row">
+                    <div class="user-text">
+                        <p>Welcome back,</p>
+                        <h2 id="home-username">User</h2>
+                    </div>
+                    <img id="home-user-img" src="" class="avatar">
+                </div>
+                
+                <div class="balance-card">
+                    <p>Total Balance</p>
+                    <div class="amount-row">
+                        <span id="balance-display">₹ 0.00</span>
+                        <i class="fa-solid fa-eye" id="eye-icon" onclick="toggleBalance()"></i>
+                    </div>
+                </div>
+
+                <div class="summary-box">
+                    <div class="s-item income">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        <div>
+                            <span>Income</span>
+                            <h4 id="total-income">₹ 0</h4>
+                        </div>
+                    </div>
+                    <div class="s-item expense">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        <div>
+                            <span>Expense</span>
+                            <h4 id="total-expense">₹ 0</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-header">
+                <h3>History</h3>
+                <span onclick="clearHistory()" style="font-size:12px; color:red; cursor:pointer;">Clear All</span>
+            </div>
+            <div id="transaction-list" class="scroll-list">
+                </div>
+        </div>
+
+        <div id="goal-view" class="tab-content">
+            <div class="top-bar"><h2>Goals</h2></div>
+            <div id="goal-list" class="scroll-list-padded"></div>
+            <button class="fab-center" onclick="openModal('goal-modal')">+ Add Goal</button>
+        </div>
+
+        <div id="list-view" class="tab-content">
+            <div class="top-bar"><h2>Smart Lists</h2></div>
+            <div id="smart-lists-container" class="scroll-list-padded"></div>
+            <button class="fab-center" onclick="openModal('list-create-modal')">+ Create List</button>
+        </div>
+
+        <div id="settings-view" class="tab-content">
+            <div class="top-bar"><h2>Settings</h2></div>
+            <div class="settings-container">
+                
+                <div class="setting-item" onclick="openEditProfile()">
+                    <div class="st-left">
+                        <img id="setting-user-img" src="" class="small-avatar">
+                        <div style="margin-left:10px;">
+                            <h4 style="font-size:14px;">Edit Profile</h4>
+                            <p style="font-size:10px; color:#888;">Name, Photo, Mobile</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="font-size:12px; color:#aaa;"></i>
+                </div>
+
+                <div class="setting-item">
+                    <div class="st-left">
+                        <i class="fa-solid fa-moon"></i>
+                        <span>Dark Mode</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                
+                <div class="setting-item" onclick="handleLogout()">
+                    <div class="st-left" style="color:var(--danger)">
+                        <i class="fa-solid fa-power-off"></i>
+                        <span>Reset Data & Logout</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fab" id="home-fab" onclick="openModal('transaction-modal')">
+            <i class="fa-solid fa-plus"></i>
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home-view', this)">
+                <i class="fa-solid fa-house"></i><span>Home</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('goal-view', this)">
+                <i class="fa-solid fa-bullseye"></i><span>Goal</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('list-view', this)">
+                <i class="fa-solid fa-list-check"></i><span>List</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('settings-view', this)">
+                <i class="fa-solid fa-gear"></i><span>Settings</span>
+            </div>
+        </nav>
+    </div>
+
+    <div id="transaction-modal" class="modal">
+        <div class="modal-content">
+            <h3>Add Transaction</h3>
+            <div class="type-selector">
+                <button class="type-btn active" id="btn-inc" onclick="setTransType('income')">Income</button>
+                <button class="type-btn" id="btn-exp" onclick="setTransType('expense')">Expense</button>
+            </div>
+            <input type="number" id="t-amount" placeholder="Amount (₹)" class="modal-input">
+            <input type="text" id="t-note" placeholder="Note / Reason" class="modal-input">
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('transaction-modal')">Cancel</button>
+                <button class="btn-save" onclick="saveTransaction()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="goal-modal" class="modal">
+        <div class="modal-content">
+            <h3>New Goal</h3>
+            <input type="text" id="g-name" placeholder="Goal Name (e.g. Car)" class="modal-input">
+            <input type="number" id="g-amount" placeholder="Target Amount (₹)" class="modal-input">
+            <label style="font-size:12px; color:#666; display:block; text-align:left;">Target Date:</label>
+            <input type="date" id="g-date" class="modal-input">
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('goal-modal')">Cancel</button>
+                <button class="btn-save" onclick="saveGoal()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="list-create-modal" class="modal">
+        <div class="modal-content">
+            <h3>Create New List</h3>
+            <input type="text" id="l-name" placeholder="List Name (e.g. Grocery)" class="modal-input">
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('list-create-modal')">Cancel</button>
+                <button class="btn-save" onclick="createList()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="item-add-modal" class="modal">
+        <div class="modal-content">
+            <h3>Add Item</h3>
+            <input type="text" id="item-name" placeholder="Item Name (e.g. Rice)" class="modal-input">
+            
+            <div class="row-input">
+                <input type="number" id="item-qty" placeholder="Qty" class="modal-input" style="flex:1;">
+                
+                <select id="item-unit" class="modal-input" style="flex:1;">
+                    <option value="Kg">Kg</option>
+                    <option value="Gm">Gm</option>
+                    <option value="Pcs">Pcs</option>
+                    <option value="Ltr">Ltr</option>
+                    <option value="Pkt">Pkt</option>
+                </select>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('item-add-modal')">Cancel</button>
+                <button class="btn-save" onclick="saveListItem()">Add Item</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="list-logic-modal" class="modal">
+        <div class="modal-content">
+            <h3>Process Items</h3>
+            <p id="logic-msg">Selected items processing...</p>
+            <div id="calc-inputs" class="hidden"></div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('list-logic-modal')">Cancel</button>
+                <button class="btn-save" id="logic-confirm-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="profile-edit-modal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Profile</h3>
+            
+            <div class="profile-upload-wrapper" style="margin-top:10px;">
+                <div class="profile-image-box">
+                    <img id="edit-img-preview" src="" alt="Profile">
+                </div>
+                <label for="edit-photo-input" class="camera-btn">
+                    <i class="fa-solid fa-camera"></i>
+                </label>
+                <input type="file" id="edit-photo-input" hidden accept="image/*" onchange="previewImage(this, 'edit-img-preview')">
+            </div>
+
+            <div class="input-group" style="margin-top:20px;">
+                <label>Name</label>
+                <input type="text" id="edit-profile-name" class="modal-input">
+            </div>
+            <div class="input-group">
+                <label>Mobile</label>
+                <input type="text" id="edit-profile-mobile" class="modal-input">
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal('profile-edit-modal')">Cancel</button>
+                <button class="btn-save" onclick="saveProfileChanges()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
